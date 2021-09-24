@@ -1,0 +1,16 @@
+{
+    "hosts": [
+      "demo-service.kube-exec-controller.svc",
+      "demo-service.kube-exec-controller.svc.cluster.local"
+    ],
+    "CN": "system:node:demo-service.kube-exec-controller.svc",
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    },
+    "names": [
+      {
+        "O": "system:nodes"
+      }
+    ]
+}

@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: demo-validating-webhook-config
+webhooks:
+  - name: validate-pod-exec.example.com
+    sideEffects: None
+    rules:
+      - apiGroups: ["*"]
+        apiVersions: ["v1"]
+        operations: ["CONNECT"]
+        resources: ["pods/exec", "pods/attach"]
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: demo-service
+        namespace: kube-exec-controller
+        path: "/admit-pod-interaction"
+      caBundle: "{{CABUNDLE_VALUE}}"
+    admissionReviewVersions: ["v1", "v1beta1"]
+  - name: validate-pod-update.example.com
+    sideEffects: None
+    rules:
+      - apiGroups: ["*"]
+        apiVersions: ["v1"]
+        operations: ["UPDATE"]
+        resources: ["pods"]
+    failurePolicy: Fail
+    clientConfig:
+      service:
+        name: demo-service
+        namespace: kube-exec-controller
+        path: "/admit-pod-update"
+      caBundle: "{{CABUNDLE_VALUE}}"
+    admissionReviewVersions: ["v1", "v1beta1"]

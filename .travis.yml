@@ -1,0 +1,6 @@
+language: go
+go:
+  - 1.16
+script:
+  - make test-unit
+  - .travis/check_workspace.sh
