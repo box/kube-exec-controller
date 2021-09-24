@@ -1,0 +1,22 @@
+# Binaries for programs and plugins
+/kube-exec-controller
+/kubectl-pi
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Local development files
+.DS_Store
+.idea/*
+.vscode
+
+# CSR related files
+server-key.pem
+server.crt
+server.csr
+
+# Ensure no vendor files get ignored
+!vendor/**
