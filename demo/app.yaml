@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-exec-controller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: demo-deploy
+  namespace: kube-exec-controller
+spec: 
+  selector:
+    matchLabels:
+      app: demo-deploy
+  template:
+    metadata:
+      labels:
+        app: demo-deploy
+    spec:
+      serviceAccount: demo-service-account
+      containers:
+        - name: app
+          command: ["/bin/sh"]
+          args: ["-c", "/kube-exec-controller --ttl-seconds=120 --cert-path=/certs/tls.crt --key-path=/certs/tls.key"]
+          env:
+            - name: LOG_LEVEL
+              value: info
+          image: "kube-exec-controller:local"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+              name: app-port
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+            - name: demo-volume
+              mountPath: "/certs"
+              readOnly: true
+      volumes:
+        - name: demo-volume
+          secret:
+            secretName: demo-secret # this secret provides TLS key-pair and is applied in demo/deploy.sh script
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-service
+  namespace: kube-exec-controller
+spec:
+  selector:
+    app: demo-deploy
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: app-port
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demo-service-account
+  namespace: kube-exec-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: demo-cluster-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources: ["pods/eviction"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: demo-cluster-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: demo-service-account
+    namespace: kube-exec-controller
+roleRef:
+  kind: ClusterRole
+  name: demo-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+---
