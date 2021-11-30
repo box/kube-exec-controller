@@ -219,7 +219,7 @@ func (o *CmdOptions) printTable(infoList []PodInteractionInfo) error {
 	w := new(tabwriter.Writer)
 	// format in tab-separated columns with a tab stop of 8
 	w.Init(o.Out, 0, 8, 2, '\t', 0)
-	fmt.Fprintln(w, "POD_NAME\tINTERACTOR\tPOD_TTL\tEXTENSION\tEXTENSION_REQUESTER\tEVICTION_TIME")
+	fmt.Fprintln(w, "POD-NAME\tINTERACTOR\tPOD-TTL\tEXTENSION\tEXTENSION-REQUESTER\tEVICTION-TIME")
 	for _, info := range infoList {
 		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t%s",
 			info.podName,

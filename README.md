@@ -59,14 +59,14 @@ Warning  PodInteraction  21s   kube-exec-controller  Pod will be evicted at time
 You can also utilize the `kubectl pi` plugin to get more detailed info or request an extension to the test Pod's eviction time:
 ```
 $ kubectl pi get
-POD_NAME  INTERACTOR        POD_TTL  EXTENSION  EXTENSION_REQUESTER  EVICTION_TIME
+POD-NAME  INTERACTOR        POD-TTL  EXTENSION  EXTENSION-REQUESTER  EVICTION-TIME
 test      kubernetes-admin  2m0s                                     2021-10-16 18:06:44 +0000 UTC
 
 $ kubectl pi extend --duration=1m
 Successfully extended the termination time of pod/test with a duration=1m
 
 $ kubectl pi get
-POD_NAME  INTERACTOR        POD_TTL  EXTENSION  EXTENSION_REQUESTER  EVICTION_TIME
+POD-NAME  INTERACTOR        POD-TTL  EXTENSION  EXTENSION-REQUESTER  EVICTION-TIME
 test      kubernetes-admin  2m0s     1m         kubernetes-admin     2021-10-16 18:07:44 +0000 UTC
 
 $ kubectl describe pod test
